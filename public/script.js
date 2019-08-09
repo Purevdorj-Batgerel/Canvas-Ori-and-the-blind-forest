@@ -5,14 +5,7 @@ window.onload = () => {
     navigator.mozGetUserMedia ||
     navigator.msGetUserMedia;
 
-  let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  let analyser = audioCtx.createAnalyser();
-  analyser.minDecibels = -110;
-  analyser.maxDecibels = -30;
-  analyser.smoothingTimeConstant = 0.88;
-
-  let bufferLength = analyser.frequencyBinCount;
-  let dataArray = new Uint8Array(bufferLength);
+  let analyser;
 
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
@@ -20,20 +13,15 @@ window.onload = () => {
   let mouseX = 0,
     mouseY = 0;
 
-  document.querySelector('#overlay').addEventListener('click', function() {
-    console.log('test');
-    // audioCtx.resume().then(() => {
-    //     console.log("playback should resume");
-    // });
-  });
+  let fireFlies = [];
+  let fliesCount = 50;
+
+  document.body.addEventListener('click', audioInitializer);
 
   window.addEventListener('mousemove', function(evt) {
     mouseX = evt.x;
     mouseY = evt.y;
   });
-
-  let fireFlies = [];
-  let fliesCount = 50;
 
   for (let i = 0; i < fliesCount; i++) {
     fireFlies.push({
@@ -44,10 +32,39 @@ window.onload = () => {
     });
   }
 
-  var bg = new Image();
-  var logo = new Image();
+  const bg = new Image();
+  const logo = new Image();
   logo.src = 'logo2.png';
   bg.src = 'bg.jpg';
+
+  function audioInitializer() {
+    const audioElement = document.getElementById('audio');
+
+    const playPromise = audioElement.play();
+
+    if (playPromise) {
+      playPromise
+        .then(_ => {
+          const audioCtx = new (window.AudioContext ||
+            window.webkitAudioContext)();
+          analyser = audioCtx.createAnalyser();
+
+          analyser.minDecibels = -110;
+          analyser.maxDecibels = -30;
+          analyser.smoothingTimeConstant = 0.88;
+
+          const source = audioCtx.createMediaElementSource(audioElement);
+          source.connect(analyser);
+          analyser.connect(audioCtx.destination);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+        .finally(_ => {
+          document.body.removeEventListener('click', audioInitializer);
+        });
+    }
+  }
 
   function draw() {
     ctx.canvas.width = window.innerWidth;
@@ -56,7 +73,9 @@ window.onload = () => {
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
     drawBackground();
-    visualizer();
+    if (analyser) {
+      visualizer();
+    }
     drawLogo();
     drawAnimation();
 
@@ -194,8 +213,8 @@ window.onload = () => {
       analyser.fftSize = 1024;
     }
 
-    bufferLength = analyser.frequencyBinCount;
-    dataArray = new Uint8Array(bufferLength);
+    let bufferLength = analyser.frequencyBinCount;
+    let dataArray = new Uint8Array(bufferLength);
 
     analyser.getByteFrequencyData(dataArray);
     let barWidth = window.innerWidth / bufferLength;
@@ -211,12 +230,6 @@ window.onload = () => {
       ctx.restore();
     }
   }
-
-  let source = audioCtx.createMediaElementSource(
-    document.getElementById('audio')
-  );
-  source.connect(analyser);
-  analyser.connect(audioCtx.destination);
 
   window.requestAnimationFrame(draw);
 
