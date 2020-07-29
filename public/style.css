@@ -4,7 +4,6 @@ body {
 }
 
 #overlay {
-    /* display: none; */
     opacity: 0.5;
     position: fixed;
     z-index: 1;
@@ -17,7 +16,6 @@ body {
 }
 
 #gradient {
-    /* display: none; */
     position: fixed;
     z-index: 2;
     top: 0;
@@ -33,17 +31,16 @@ body {
     left: 50%;
     top: 75%;
     color: white;
-    font-size: 27px;
+    font-size: min(3vh, 27px);
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 10;
     font-family: 'Montserrat', sans-serif;
-    /* font-family: 'Roboto', sans-serif; */
-    /* font-family: 'Roboto Condensed', sans-serif; */
+    width: calc(100% - 100px);
 }
 
 .songName {
-    font-size: 42px;
+    font-size: min(5vh, 46px);
     margin-bottom: 8px;
 }
 .albumName {
@@ -51,5 +48,4 @@ body {
 }
 .artistName {
     font-weight: bold;
-
 }
