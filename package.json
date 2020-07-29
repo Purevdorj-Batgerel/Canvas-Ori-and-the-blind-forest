@@ -4,11 +4,13 @@
   "description": "",
   "main": "script.js",
   "scripts": {
+    "start": "live-server ./public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "express": "^4.16.3"
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.1"
   }
 }
