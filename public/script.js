@@ -73,6 +73,8 @@ window.onload = () => {
   function start () {
     startTime = performance.now()
 
+    resizeAllCanvas()
+    updateAll()
     audioInitializer()
 
     document.body.removeEventListener('click', start)
