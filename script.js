@@ -7,18 +7,49 @@ const bg = new Image()
 const logo = new Image()
 const pattern = new Image()
 const clickIcon = new Image()
+const fullScreenIcon = new Image()
+const fullScreenExitIcon = new Image()
 const audio = new Audio('./ori_main_theme.mp3')
 
 logo.src = 'logo1.png'
 bg.src = 'bg.jpg'
 pattern.src = 'raster.png'
 clickIcon.src = 'click.svg'
+fullScreenIcon.src = 'fullscreen.svg'
+fullScreenExitIcon.src = 'fullscreenExit.svg'
 
-const fliesCount = window.innerHeight * window.innerWidth / 40000
+const songTitle = 'Main Theme - Definitive Edition'
+const songArtist = 'Gareth Coker'
+const songAlbum = 'Ori and the Blind Forest (Additional Soundtrack)'
+
+const backgroundCanvas = document.createElement('canvas')
+const logoCanvas = document.createElement('canvas')
+const clickCanvas = document.createElement('canvas')
+const patternCanvas = document.createElement('canvas')
+const gradientCanvas = document.createElement('canvas')
+const textCanvas = document.createElement('canvas')
+const fullScreenCanvas = document.createElement('canvas')
+const fullScreenExitCanvas = document.createElement('canvas')
+
+const canvases = [
+  backgroundCanvas,
+  logoCanvas,
+  clickCanvas,
+  patternCanvas,
+  gradientCanvas,
+  textCanvas,
+  fullScreenCanvas,
+  fullScreenExitCanvas
+]
+let minRatio = 1
+
+const fliesCount = (window.innerHeight * window.innerWidth) / 40000
 const fireFlies = []
 
 let mouseX = 0
 let mouseY = 0
+
+let isSoundInitialized = false
 
 for (let i = 0; i < fliesCount; i++) {
   fireFlies.push({
@@ -29,28 +60,20 @@ for (let i = 0; i < fliesCount; i++) {
   })
 }
 
+function calcDimensionRatio () {
+  const hRatio = bg.naturalHeight / window.innerHeight
+  const wRatio = bg.naturalWidth / window.innerWidth
+  return Math.min(hRatio, wRatio)
+}
+
 window.onload = () => {
-  navigator.getUserMedia =
-    navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia
-
   const canvas = document.getElementById('canvas')
-  const backgroundCanvas = document.createElement('canvas')
-  const logoCanvas = document.createElement('canvas')
-  const clickCanvas = document.createElement('canvas')
-  const patternCanvas = document.createElement('canvas')
-  const gradientCanvas = document.createElement('canvas')
-  const textCanvas = document.createElement('canvas')
-
   const ctx = canvas.getContext('2d')
+  canvases.push(canvas)
 
-  let hRatio = bg.naturalHeight / window.innerHeight
-  let wRatio = bg.naturalWidth / window.innerWidth
-  let minRatio = Math.min(hRatio, wRatio)
+  minRatio = calcDimensionRatio()
 
-  document.body.addEventListener('click', start)
+  canvas.addEventListener('click', clickHandler)
 
   window.addEventListener('mousemove', function (evt) {
     mouseX = evt.x
@@ -60,15 +83,34 @@ window.onload = () => {
   window.addEventListener('resize', function () {
     resizeAllCanvas()
 
-    hRatio = bg.naturalHeight / window.innerHeight
-    wRatio = bg.naturalWidth / window.innerWidth
-    minRatio = Math.min(hRatio, wRatio)
+    minRatio = calcDimensionRatio()
 
     updateAll()
   })
 
   resizeAllCanvas()
   updateAll()
+
+  function clickHandler (event) {
+    const { clientX, clientY } = event
+
+    if (
+      window.innerWidth - fullScreenIcon.width - 16 < clientX &&
+      clientX < window.innerWidth - 16 &&
+      clientY > 16 &&
+      clientY < 16 + fullScreenIcon.height
+    ) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen()
+      } else {
+        document.body.requestFullscreen()
+      }
+    } else {
+      if (!isSoundInitialized) {
+        start()
+      }
+    }
+  }
 
   function start () {
     startTime = performance.now()
@@ -77,7 +119,7 @@ window.onload = () => {
     updateAll()
     audioInitializer()
 
-    document.body.removeEventListener('click', start)
+    isSoundInitialized = true
   }
 
   function audioInitializer () {
@@ -105,27 +147,12 @@ window.onload = () => {
   }
 
   function resizeAllCanvas () {
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-
-    backgroundCanvas.width = canvas.width
-    backgroundCanvas.height = canvas.height
-
-    logoCanvas.width = canvas.width
-    logoCanvas.height = canvas.height
-
-    clickCanvas.width = canvas.width
-    clickCanvas.height = canvas.height
-
-    patternCanvas.width = canvas.width
-    patternCanvas.height = canvas.height
-
-    gradientCanvas.width = canvas.width
-    gradientCanvas.height = canvas.height
-
-    textCanvas.width = canvas.width
-    textCanvas.height = canvas.height
+    canvases.forEach((canvas) => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    })
   }
+
   // #region Update
   function updateBackground () {
     if (bg.complete) {
@@ -135,7 +162,9 @@ window.onload = () => {
       const wOffset = (window.innerWidth - finalWidth) / 2
       const hOffset = (window.innerHeight - finalHeight) / 2
 
-      backgroundCanvas.getContext('2d').drawImage(bg, wOffset, hOffset, finalWidth, finalHeight)
+      backgroundCanvas
+        .getContext('2d')
+        .drawImage(bg, wOffset, hOffset, finalWidth, finalHeight)
     }
   }
 
@@ -149,7 +178,9 @@ window.onload = () => {
       const wOffset = (window.innerWidth - finalWidth) / 2
       const hOffset = -50 / _minRatio
 
-      logoCanvas.getContext('2d').drawImage(logo, wOffset, hOffset, finalWidth, finalHeight)
+      logoCanvas
+        .getContext('2d')
+        .drawImage(logo, wOffset, hOffset, finalWidth, finalHeight)
     }
   }
 
@@ -163,7 +194,34 @@ window.onload = () => {
       const wOffset = (window.innerWidth - finalWidth) / 2 - 5
       const hOffset = window.innerHeight * 0.86
 
-      clickCanvas.getContext('2d').drawImage(clickIcon, wOffset, hOffset, finalWidth, finalHeight)
+      clickCanvas
+        .getContext('2d')
+        .drawImage(clickIcon, wOffset, hOffset, finalWidth, finalHeight)
+    }
+  }
+
+  function updateFullScreen () {
+    if (fullScreenIcon.complete) {
+      fullScreenCanvas
+        .getContext('2d')
+        .drawImage(
+          fullScreenIcon,
+          window.innerWidth - fullScreenIcon.width - 16,
+          16,
+          fullScreenIcon.width,
+          fullScreenIcon.height
+        )
+    }
+    if (fullScreenExitIcon.complete) {
+      fullScreenExitCanvas
+        .getContext('2d')
+        .drawImage(
+          fullScreenExitIcon,
+          window.innerWidth - fullScreenIcon.width - 16,
+          16,
+          fullScreenIcon.width,
+          fullScreenIcon.height
+        )
     }
   }
 
@@ -207,7 +265,7 @@ window.onload = () => {
     const _ctx = textCanvas.getContext('2d')
     const textWidth = window.innerWidth - 40
     let fontSize = Math.min(40, window.innerHeight / 20)
-    let text = 'Main Theme - Definitive Edition'
+    let text = songTitle
 
     _ctx.font = `${fontSize}px Montserrat`
     _ctx.fillStyle = 'white'
@@ -229,7 +287,7 @@ window.onload = () => {
 
     fontSize = Math.min(27, (window.innerHeight / 100) * 3)
     _ctx.font = `${fontSize}px Montserrat`
-    text = 'Ori and the Blind Forest (Additional Soundtrack)'
+    text = songAlbum
 
     lines = calcTextLines(_ctx, fontSize, text, textWidth)
     lines.forEach((line) => {
@@ -243,7 +301,7 @@ window.onload = () => {
 
     cumulativeHeight += lastHeight + 8
 
-    text = 'Gareth Coker'
+    text = songArtist
     _ctx.font = `bold ${fontSize}px Montserrat`
     lines = calcTextLines(_ctx, fontSize, text, textWidth)
     lines.forEach((line) => {
@@ -262,6 +320,7 @@ window.onload = () => {
     updateClick()
     updatePattern()
     updateGradient()
+    updateFullScreen()
     updateText()
   }
   // #endregion
@@ -276,10 +335,11 @@ window.onload = () => {
     }
     drawLogo()
     drawClick(time)
-    drawPattern()
+    drawFliesAnimation()
     drawGradient()
+    drawFullScreenIcon()
+    drawPattern()
     drawTexts(time)
-    drawAnimation()
 
     window.requestAnimationFrame(draw)
   }
@@ -315,6 +375,14 @@ window.onload = () => {
 
   function drawLogo () {
     ctx.drawImage(logoCanvas, 0, 0)
+  }
+
+  function drawFullScreenIcon () {
+    if (document.fullscreenElement) {
+      ctx.drawImage(fullScreenExitCanvas, 0, 0)
+    } else {
+      ctx.drawImage(fullScreenCanvas, 0, 0)
+    }
   }
 
   function drawClick (time) {
@@ -359,8 +427,8 @@ window.onload = () => {
     ctx.globalAlpha = 1
   }
 
-  function drawAnimation () {
-    update()
+  function drawFliesAnimation () {
+    updateFlies()
     for (let i = 0; i < fliesCount; i++) {
       const f = fireFlies[i]
       const radGrad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r)
@@ -394,7 +462,7 @@ window.onload = () => {
   window.requestAnimationFrame(draw)
 }
 
-function update () {
+function updateFlies () {
   for (let i = 0; i < fliesCount; i++) {
     const p = fireFlies[i]
     p.angle += 0.01
