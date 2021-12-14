@@ -4,19 +4,13 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "start": "live-server ./public",
+    "start": "snowpack dev",
+    "build": "snowpack build --config ./prod-snowpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
   "devDependencies": {
-    "eslint": "^7.5.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "live-server": "^1.2.1"
+    "snowpack": "^3.8.8"
   }
 }
