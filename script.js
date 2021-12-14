@@ -468,7 +468,9 @@ window.onload = () => {
     drawUI();
   });
 
-  if (!navigator.userAgentData.mobile) {
+  if ("ondeviceorientation" in document.documentElement) {
+    window.addEventListener("deviceorientation", handleDeviceOrientation);
+  } else {
     window.addEventListener("mousemove", (evt) => {
       mouseX = evt.x;
       mouseY = evt.y;
@@ -477,8 +479,6 @@ window.onload = () => {
 
       handleDeviceOrientation({ beta: angle, gamma: angle });
     });
-  } else {
-    window.addEventListener("deviceorientation", handleDeviceOrientation);
   }
 
   initializeStyles(canvases);
