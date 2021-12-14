@@ -468,7 +468,7 @@ window.onload = () => {
     drawUI();
   });
 
-  if ("ondeviceorientation" in document.documentElement) {
+  if (navigator.maxTouchPoints) {
     window.addEventListener("deviceorientation", handleDeviceOrientation);
   } else {
     window.addEventListener("mousemove", (evt) => {
