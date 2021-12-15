@@ -14,7 +14,7 @@ const bg_back = new Image();
 const bg_mid = new Image();
 const bg_fore = new Image();
 bg_back.src = "./assets/bg_back_32.png";
-bg_mid.src = "./assets/bg_mid_32.png";
+bg_mid.src = "./assets/bg_mid_64.png";
 bg_fore.src = "./assets/bg_fore_32.png";
 
 const audio = new Audio("./assets/ori_main_theme.mp3");
