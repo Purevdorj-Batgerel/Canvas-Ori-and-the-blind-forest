@@ -472,18 +472,16 @@ window.onload = () => {
     drawUI();
   });
 
-  if (navigator.maxTouchPoints) {
-    window.addEventListener("deviceorientation", handleDeviceOrientation);
-  } else {
-    window.addEventListener("mousemove", (evt) => {
-      mouseX = evt.x;
-      mouseY = evt.y;
+  window.addEventListener("deviceorientation", handleDeviceOrientation);
 
-      const angle = (mouseX * 100) / window.innerWidth - 50;
+  window.addEventListener("mousemove", (evt) => {
+    mouseX = evt.x;
+    mouseY = evt.y;
 
-      handleDeviceOrientation({ beta: angle, gamma: angle });
-    });
-  }
+    const angle = (mouseX * 100) / window.innerWidth - 50;
+
+    handleDeviceOrientation({ beta: angle, gamma: angle });
+  });
 
   initializeStyles(canvases);
   resizeCanvases(canvases);
