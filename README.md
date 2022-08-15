@@ -9,11 +9,14 @@ Web canvas learning project
 ### Number of style files (css, sass, styl):
 Zero
 
-### Used third party libraries for animation, sound, particle, parallax effect
+### Used third party libraries for animation, sound, particle, parallax effect:
 None
 
 ## Live preview
 https://purevdorj-batgerel.github.io/Canvas-Ori-and-the-blind-forest/
+
+## Font
+[Montserrat](https://fonts.google.com/specimen/Montserrat)
 
 ## Music
 Gareth Coker, Ori and the Blind Forest, Main Theme - Definitive Edition
