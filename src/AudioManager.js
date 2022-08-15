@@ -1,6 +1,6 @@
 export default class AudioManager {
   constructor() {
-    this.audio = new Audio("/ori_main_theme.mp3");
+    this.audio = new Audio("./ori_main_theme.mp3");
     this.isSoundInitialized = false;
 
     this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();

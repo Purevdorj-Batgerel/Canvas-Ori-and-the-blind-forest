@@ -11,9 +11,9 @@ export default class ParallaxCanvas extends Canvas {
     this.bg_mid = new Image();
     this.bg_fore = new Image();
 
-    this.bg_back.src = "/bg_back_32.png";
-    this.bg_mid.src = "/bg_mid_64.png";
-    this.bg_fore.src = "/bg_fore_32.png";
+    this.bg_back.src = "./bg_back_32.png";
+    this.bg_mid.src = "./bg_mid_64.png";
+    this.bg_fore.src = "./bg_fore_32.png";
   }
 
   draw() {

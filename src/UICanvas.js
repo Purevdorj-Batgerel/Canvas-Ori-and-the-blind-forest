@@ -44,10 +44,10 @@ export default class UICanvas extends Canvas {
     this.fadeProgress = 0;
 
     this.logo = new Image();
-    this.logo.src = "/logo.png";
+    this.logo.src = "./logo.png";
 
     this.pattern = new Image();
-    this.pattern.src = "/raster.png";
+    this.pattern.src = "./raster.png";
   }
 
   draw(time) {
