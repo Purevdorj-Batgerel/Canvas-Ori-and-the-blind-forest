@@ -13,12 +13,11 @@ export function calcTextLines(ctx, fontSize, text, maxWidth) {
   const lines = [];
   const words = text.split(" ");
   let line = "";
-  let lineTest = "";
   let height = 0;
   const heightModifier = 1.4;
 
   words.forEach((word) => {
-    lineTest = line + word + " ";
+    const lineTest = line + word + " ";
     if (ctx.measureText(lineTest).width > maxWidth) {
       height = (lines.length + 1) * fontSize * heightModifier;
       lines.push({ text: line, height });
