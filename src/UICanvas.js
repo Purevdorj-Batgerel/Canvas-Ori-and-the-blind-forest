@@ -43,10 +43,10 @@ export default class UICanvas extends Canvas {
     this.fadeProgress = 0;
 
     this.logo = new Image();
-    this.logo.src = "./logo.png";
+    this.logo.src = "./logo.webp";
 
     this.pattern = new Image();
-    this.pattern.src = "./raster.png";
+    this.pattern.src = "./raster.webp";
   }
 
   draw(time) {
@@ -212,20 +212,20 @@ export default class UICanvas extends Canvas {
     this.ctx.textAlign = "center";
 
     let fontSize = Math.min(36, window.innerHeight / 12);
-    this.ctx.font = `${fontSize}px Montserrat`;
+    this.ctx.font = `${fontSize}px Verdana`;
     renderText.call(
       this,
       calcTextLines(this.ctx, fontSize, SONG_TITLE, textWidth)
     );
 
     fontSize = Math.min(27, (window.innerHeight / 12) * 0.75);
-    this.ctx.font = `${fontSize}px Montserrat`;
+    this.ctx.font = `${fontSize}px Verdana`;
     renderText.call(
       this,
       calcTextLines(this.ctx, fontSize, SONG_ALBUM, textWidth)
     );
 
-    this.ctx.font = `bold ${fontSize}px Montserrat`;
+    this.ctx.font = `bold ${fontSize}px Verdana`;
     renderText.call(
       this,
       calcTextLines(this.ctx, fontSize, SONG_ARTIST, textWidth)
