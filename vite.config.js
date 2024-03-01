@@ -6,4 +6,7 @@ export default defineConfig({
     https: true,
   },
   plugins: [basicSsl()],
+  build: {
+    assetsDir: "./",
+  },
 });
