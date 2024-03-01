@@ -8,10 +8,6 @@ import WispCanvas from "./src/WispCanvas";
 
 import { fadeStartTime, setDimensionRatio } from "./src/globalValues";
 
-document.body.style.position = "fixed";
-document.body.style.margin = 0;
-document.body.style.font = "12px Verdana";
-
 const audioManager = new AudioManager();
 const inputManager = new InputManager(audioManager);
 
@@ -38,26 +34,26 @@ const draw = (time) => {
   window.requestAnimationFrame(draw);
 };
 
-// window.onload = () => {
-//   window.addEventListener("resize", () => {
-//     setDimensionRatio();
-//     canvasManager.resizeCanvases();
-//     canvasManager.draw();
-//   });
-//   window.addEventListener("deviceorientation", (event) => {
-//     inputManager.handleDeviceOrientation(event);
-//     parallaxCanvas.draw();
-//   });
-//   window.addEventListener("mousemove", (event) => {
-//     inputManager.handleMouseMove(event);
-//     parallaxCanvas.draw();
-//   });
+window.onload = () => {
+  window.addEventListener("resize", () => {
+    setDimensionRatio();
+    canvasManager.resizeCanvases();
+    canvasManager.draw();
+  });
+  window.addEventListener("deviceorientation", (event) => {
+    inputManager.handleDeviceOrientation(event);
+    parallaxCanvas.draw();
+  });
+  window.addEventListener("mousemove", (event) => {
+    inputManager.handleMouseMove(event);
+    parallaxCanvas.draw();
+  });
 
-//   const topMostCanvas = canvasManager.getCanvasElements().at(-1);
-//   topMostCanvas.addEventListener("click", inputManager.handleClick);
+  const topMostCanvas = canvasManager.getCanvasElements().at(-1);
+  topMostCanvas.addEventListener("click", inputManager.handleClick);
 
-//   canvasManager.appendToDom();
-//   canvasManager.draw();
+  canvasManager.appendToDom();
+  canvasManager.draw();
 
-//   draw();
-// };
+  draw();
+};
