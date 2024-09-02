@@ -7,7 +7,7 @@ export function gaussianRand() {
       Math.random() +
       Math.random() -
       3) /
-      3
+      3,
   );
 }
 

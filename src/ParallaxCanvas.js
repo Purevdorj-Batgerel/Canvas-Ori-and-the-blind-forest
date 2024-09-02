@@ -28,21 +28,21 @@ export default class ParallaxCanvas extends Canvas {
       Math.ceil(wOffset - this.inputManager.tiltAngle * 0.3),
       hOffset,
       newWidth,
-      newHeight
+      newHeight,
     );
     this.ctx.drawImage(
       this.bg_mid,
       Math.ceil(wOffset + this.inputManager.tiltAngle * 0.2),
       hOffset,
       newWidth,
-      newHeight
+      newHeight,
     );
     this.ctx.drawImage(
       this.bg_fore,
       Math.ceil(wOffset + this.inputManager.tiltAngle * 0.7),
       hOffset,
       newWidth,
-      newHeight
+      newHeight,
     );
   }
 }

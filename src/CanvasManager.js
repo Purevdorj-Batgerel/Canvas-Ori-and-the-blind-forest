@@ -19,19 +19,21 @@ export default class CanvasManager {
   }
 
   appendToDom() {
-    this.getCanvasElements().forEach((canvas) =>
-      document.body.appendChild(canvas)
-    );
+    for (const canvas of this.getCanvasElements()) {
+      document.body.appendChild(canvas);
+    }
   }
 
   draw() {
-    this.canvases.forEach((canvas) => canvas.draw());
+    for (const canvas of this.canvases) {
+      canvas.draw();
+    }
   }
 
   resizeCanvases() {
-    this.getCanvasElements().forEach((canvas) => {
+    for (const canvas of this.getCanvasElements()) {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    });
+    }
   }
 }

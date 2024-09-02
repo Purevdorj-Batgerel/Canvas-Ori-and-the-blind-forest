@@ -1,5 +1,5 @@
-import { gaussianRand } from "./utils";
 import Canvas from "./Canvas";
+import { gaussianRand } from "./utils";
 
 export default class WispCanvas extends Canvas {
   constructor(inputManager) {
@@ -8,7 +8,7 @@ export default class WispCanvas extends Canvas {
     this.inputManager = inputManager;
 
     const wispCount = Math.floor(
-      (window.innerHeight * window.innerWidth) / 40000
+      (window.innerHeight * window.innerWidth) / 40000,
     );
 
     this.wisps = new Array(wispCount);
@@ -60,41 +60,43 @@ export default class WispCanvas extends Canvas {
     this.update();
     const { mouseX, mouseY } = this.inputManager;
 
-    this.wisps.forEach((wisp) => {
-      const radGrad = this.ctx.createRadialGradient(
-        wisp.x,
-        wisp.y,
-        0,
-        wisp.x,
-        wisp.y,
-        wisp.radius
-      );
-      const distance = Math.sqrt(
-        (wisp.x - mouseX) * (wisp.x - mouseX) +
-          (wisp.y - mouseY) * (wisp.y - mouseY)
-      );
-      if (distance > 100) {
-        radGrad.addColorStop(0, "rgba(255,255,164,.7)");
-        radGrad.addColorStop(0.4, "rgba(247,148,29,.3)");
-        radGrad.addColorStop(1, "rgba(255,218,164,0)");
-      } else {
-        radGrad.addColorStop(
+    for (const wisp of this.wisps) {
+      if (wisp) {
+        const radGrad = this.ctx.createRadialGradient(
+          wisp.x,
+          wisp.y,
           0,
-          `rgba(255,255,164,${0.7 + (0.3 * (100 - distance)) / 100})`
+          wisp.x,
+          wisp.y,
+          wisp.radius,
         );
-        radGrad.addColorStop(
-          0.4,
-          `rgba(247,148,29,${0.3 + (0.4 * (100 - distance)) / 100})`
+        const distance = Math.sqrt(
+          (wisp.x - mouseX) * (wisp.x - mouseX) +
+            (wisp.y - mouseY) * (wisp.y - mouseY),
         );
-        radGrad.addColorStop(1, "rgba(255,218,164,0)");
+        if (distance > 100) {
+          radGrad.addColorStop(0, "rgba(255,255,164,.7)");
+          radGrad.addColorStop(0.4, "rgba(247,148,29,.3)");
+          radGrad.addColorStop(1, "rgba(255,218,164,0)");
+        } else {
+          radGrad.addColorStop(
+            0,
+            `rgba(255,255,164,${0.7 + (0.3 * (100 - distance)) / 100})`,
+          );
+          radGrad.addColorStop(
+            0.4,
+            `rgba(247,148,29,${0.3 + (0.4 * (100 - distance)) / 100})`,
+          );
+          radGrad.addColorStop(1, "rgba(255,218,164,0)");
+        }
+        this.ctx.fillStyle = radGrad;
+        this.ctx.fillRect(
+          wisp.x - wisp.radius,
+          wisp.y - wisp.radius,
+          wisp.radius * 2,
+          wisp.radius * 2,
+        );
       }
-      this.ctx.fillStyle = radGrad;
-      this.ctx.fillRect(
-        wisp.x - wisp.radius,
-        wisp.y - wisp.radius,
-        wisp.radius * 2,
-        wisp.radius * 2
-      );
-    });
+    }
   }
 }

@@ -1,10 +1,10 @@
+import AudioManager from "./src/AudioManager";
 import CanvasManager from "./src/CanvasManager";
 import InputManager from "./src/Inputs";
 import ParallaxCanvas from "./src/ParallaxCanvas";
 import UICanvas from "./src/UICanvas";
-import AudioManager from "./src/AudioManager";
-import VisualizerCanvas from "./src/visualizer";
 import WispCanvas from "./src/WispCanvas";
+import VisualizerCanvas from "./src/visualizer";
 
 import { fadeStartTime, setDimensionRatio } from "./src/globalValues";
 
@@ -20,7 +20,7 @@ const canvasManager = new CanvasManager(
   parallaxCanvas,
   wispCanvas,
   visualizerCanvas,
-  uiCanvas
+  uiCanvas,
 );
 
 const draw = (time) => {
@@ -49,8 +49,8 @@ window.onload = () => {
     parallaxCanvas.draw();
   });
 
-  const topMostCanvas = canvasManager.getCanvasElements().at(-1);
-  topMostCanvas.addEventListener("click", inputManager.handleClick);
+  const surfaceCanvas = canvasManager.getCanvasElements().at(-1);
+  surfaceCanvas.addEventListener("click", inputManager.handleClick);
 
   canvasManager.appendToDom();
   canvasManager.draw();
