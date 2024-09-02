@@ -3,13 +3,10 @@ import { dimensionRatio, inputManager } from "./globalValues";
 
 /**
  * A canvas class for parallax tilt background effects.
- *
+ * @class
  * @extends Canvas
  */
 export default class ParallaxCanvas extends Canvas {
-  /**
-   * @constructor
-   */
   constructor() {
     super({ alpha: false });
 

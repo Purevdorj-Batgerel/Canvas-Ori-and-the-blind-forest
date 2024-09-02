@@ -5,13 +5,10 @@ import { gaussianRand } from "./utils";
 /**
  * A canvas class for drawing wisp-like particles.
  *
+ * @class
  * @extends Canvas
  */
 export default class WispCanvas extends Canvas {
-  /**
-   * Creates a new WispCanvas instance.
-   * @constructor
-   */
   constructor() {
     super();
 

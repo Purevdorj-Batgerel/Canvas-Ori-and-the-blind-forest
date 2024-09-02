@@ -2,7 +2,7 @@ import Canvas from "./Canvas";
 
 /**
  * A canvas class for visualizing audio frequency data.
- *
+ * @class
  * @extends Canvas
  */
 export default class VisualizerCanvas extends Canvas {
@@ -10,6 +10,7 @@ export default class VisualizerCanvas extends Canvas {
    * Creates a new VisualizerCanvas instance.
    *
    * @param {AnalyserNode} analyser - An instance of the AnalyserNode class for audio analysis.
+   * @extends Canvas
    */
   constructor(analyser) {
     super();

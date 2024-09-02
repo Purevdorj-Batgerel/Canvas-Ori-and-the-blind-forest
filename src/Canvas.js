@@ -1,11 +1,11 @@
 /**
  * Represents a canvas element with 2D drawing context.
+ * @class
  */
 export default class Canvas {
   /**
    * Creates a new Canvas instance.
    *
-   * @constructor
    * @param {CanvasRenderingContext2DSettings} [option] - Optional settings for the canvas context.
    */
   constructor(option) {
@@ -18,5 +18,13 @@ export default class Canvas {
    */
   clear() {
     this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  }
+
+  /**
+   * Draw on the canvas.
+   * @abstract
+   */
+  draw() {
+    throw new Error("Must be implemented by subclass!");
   }
 }

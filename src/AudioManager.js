@@ -1,10 +1,10 @@
 /**
  * Manages audio playback using the Web Audio API.
+ * @class
  */
 export default class AudioManager {
   /**
    * Creates a new AudioManager instance.
-   * @constructor
    */
   constructor() {
     this.audio = new Audio("./ori_main_theme.mp3");

@@ -5,12 +5,9 @@ import { audioManager, setFadeStartTime } from "./globalValues";
 
 /**
  * Manages user input.
- *
+ * @class
  */
 export default class InputManager {
-  /**
-   * @constructor
-   */
   constructor() {
     this.tiltAngle = 0;
     this.mouseX = 0;

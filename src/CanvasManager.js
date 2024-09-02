@@ -2,6 +2,8 @@ import Canvas from "./Canvas";
 
 /**
  * CanvasManager class
+ *
+ * @class
  */
 export default class CanvasManager {
   /**

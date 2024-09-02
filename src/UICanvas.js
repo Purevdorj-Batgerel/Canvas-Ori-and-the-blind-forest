@@ -46,12 +46,10 @@ export function calcTextLines(ctx, fontSize, text, maxWidth) {
 
 /**
  * The Class responsible for drawing various UI elements on top of a parallax background.
+ * @class
  * @extends Canvas
  */
 export default class UICanvas extends Canvas {
-  /**
-   * @constructor
-   */
   constructor() {
     super();
 
@@ -69,7 +67,6 @@ export default class UICanvas extends Canvas {
    *
    * @param {number} [time] - The current time used to calculate the fade progress if provided.
    */
-
   draw(time) {
     this.clear();
 
