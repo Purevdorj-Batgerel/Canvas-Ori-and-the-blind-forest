@@ -1,6 +1,6 @@
+import { inputManager } from "../globalValues";
+import { gaussianRand } from "../utils";
 import Canvas from "./Canvas";
-import { inputManager } from "./globalValues";
-import { gaussianRand } from "./utils";
 
 /**
  * A canvas class for drawing wisp-like particles.

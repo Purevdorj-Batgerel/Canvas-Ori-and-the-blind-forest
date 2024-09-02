@@ -1,5 +1,5 @@
+import { dimensionRatio, inputManager } from "../globalValues";
 import Canvas from "./Canvas";
-import { dimensionRatio, inputManager } from "./globalValues";
 
 /**
  * A canvas class for parallax tilt background effects.
