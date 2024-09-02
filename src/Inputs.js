@@ -1,7 +1,7 @@
 const FULLSCREEN_ICON_SIZE = 60;
 const VOLUME_ICON_SIZE = 48;
 
-import { setFadeStartTime, audioManager } from "./globalValues";
+import { audioManager, setFadeStartTime } from "./globalValues";
 
 /**
  * Manages user input.

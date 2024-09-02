@@ -13,7 +13,9 @@ export default class CanvasManager {
     this.canvases = canvases.filter((canvas) => canvas instanceof Canvas);
 
     if (this.canvases.length !== canvases.length) {
-      throw new Error("Invalid input: One or more arguments are not Canvas objects.");
+      throw new Error(
+        "Invalid input: One or more arguments are not Canvas objects.",
+      );
     }
 
     for (const canvas of this.canvases) {

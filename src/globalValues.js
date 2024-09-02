@@ -1,6 +1,6 @@
-import createValue from "./createValue";
 import AudioManager from "./AudioManager";
 import InputManager from "./Inputs";
+import createValue from "./createValue";
 
 import { calcDimensionRatio } from "./utils";
 

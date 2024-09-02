@@ -6,9 +6,8 @@ import VisualizerCanvas from "./src/visualizer";
 
 import { fadeStartTime, setDimensionRatio, audioManager, inputManager } from "./src/globalValues";
 
-
 const parallaxCanvas = new ParallaxCanvas();
-const wispCanvas = new WispCanvas(inputManager);
+const wispCanvas = new WispCanvas();
 const visualizerCanvas = new VisualizerCanvas(audioManager.analyser);
 const uiCanvas = new UICanvas();
 

@@ -1,6 +1,6 @@
 import Canvas from "./Canvas";
 import { easeInOutQuad } from "./animation/timings";
-import { dimensionRatio, fadeStartTime, audioManager } from "./globalValues";
+import { audioManager, dimensionRatio, fadeStartTime } from "./globalValues";
 
 const FADE_DURATION = 1000;
 const FULLSCREEN_ICON_SIZE = 60;
