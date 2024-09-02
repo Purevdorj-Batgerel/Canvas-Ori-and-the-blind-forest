@@ -1,11 +1,24 @@
 import Canvas from "./Canvas";
 
+/**
+ * A canvas class for visualizing audio frequency data.
+ *
+ * @extends Canvas
+ */
 export default class VisualizerCanvas extends Canvas {
+  /**
+   * Creates a new VisualizerCanvas instance.
+   *
+   * @param {AnalyserNode} analyser - An instance of the AnalyserNode class for audio analysis.
+   */
   constructor(analyser) {
     super();
     this.analyser = analyser;
   }
 
+  /**
+   * Draws the audio frequency visualization on the canvas.
+   */
   draw() {
     this.clear();
     if (window.innerWidth > 1599) {

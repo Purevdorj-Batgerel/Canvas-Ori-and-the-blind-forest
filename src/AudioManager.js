@@ -1,4 +1,11 @@
+/**
+ * Manages audio playback using the Web Audio API.
+ */
 export default class AudioManager {
+  /**
+   * Creates a new AudioManager instance.
+   * @constructor
+   */
   constructor() {
     this.audio = new Audio("./ori_main_theme.mp3");
     this.isSoundInitialized = false;
@@ -10,6 +17,11 @@ export default class AudioManager {
     this.analyser.smoothingTimeConstant = 0.88;
   }
 
+  /**
+   * Plays the audio and initializes the audio context.
+   *
+   * @returns {Promise<void>} A promise that resolves when the audio starts playing.
+   */
   async playAudio() {
     await this.audio.play();
     await this.audioCtx.resume();
@@ -20,10 +32,18 @@ export default class AudioManager {
     this.analyser.connect(this.audioCtx.destination);
   }
 
+  /**
+   * Checks if the audio is currently muted.
+   *
+   * @returns {boolean} True if the audio is muted, false otherwise.
+   */
   isMuted() {
     return this.audio.muted;
   }
 
+  /**
+   * Toggles the mute state of the audio.
+   */
   toggleMute() {
     this.audio.muted = !this.audio.muted;
   }

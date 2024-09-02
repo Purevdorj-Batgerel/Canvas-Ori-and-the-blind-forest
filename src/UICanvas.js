@@ -1,6 +1,6 @@
 import Canvas from "./Canvas";
 import { easeInOutQuad } from "./animation/timings";
-import { dimensionRatio, fadeStartTime } from "./globalValues";
+import { dimensionRatio, fadeStartTime, audioManager } from "./globalValues";
 
 const FADE_DURATION = 1000;
 const FULLSCREEN_ICON_SIZE = 60;
@@ -9,6 +9,15 @@ const SONG_TITLE = "Main Theme - Definitive Edition";
 const SONG_ARTIST = "Gareth Coker";
 const SONG_ALBUM = "Ori and the Blind Forest";
 
+/**
+ * Calculates the number of lines required to fit a given text within a specified width.
+ *
+ * @param {CanvasRenderingContext2D} ctx - The canvas context.
+ * @param {number} fontSize - The font size in pixels.
+ * @param {string} text - The text to be wrapped.
+ * @param {number} maxWidth - The maximum width allowed for the text.
+ * @returns {{text: string, height: number}[]} An array of objects, each representing a line of text with its corresponding height.
+ */
 export function calcTextLines(ctx, fontSize, text, maxWidth) {
   const lines = [];
   const words = text.split(" ");
@@ -35,10 +44,16 @@ export function calcTextLines(ctx, fontSize, text, maxWidth) {
   return lines;
 }
 
+/**
+ * The Class responsible for drawing various UI elements on top of a parallax background.
+ * @extends Canvas
+ */
 export default class UICanvas extends Canvas {
-  constructor(audioManager) {
+  /**
+   * @constructor
+   */
+  constructor() {
     super();
-    this.audioManager = audioManager;
 
     this.fadeProgress = 0;
 
@@ -48,6 +63,12 @@ export default class UICanvas extends Canvas {
     this.pattern = new Image();
     this.pattern.src = "./raster.webp";
   }
+
+  /**
+   * Draws all the UI elements on the canvas.
+   *
+   * @param {number} [time] - The current time used to calculate the fade progress if provided.
+   */
 
   draw(time) {
     this.clear();
@@ -76,6 +97,9 @@ export default class UICanvas extends Canvas {
     this.drawPattern();
   }
 
+  /**
+   * Draws the logo image at a specific position and scale.
+   */
   drawLogo() {
     const logoRatio = dimensionRatio() + 0.5;
     const logoWidth = this.logo.naturalWidth / logoRatio;
@@ -92,6 +116,9 @@ export default class UICanvas extends Canvas {
     );
   }
 
+  /**
+   * Draws a radial gradient background filling the canvas.
+   */
   drawGradient() {
     // background-image: radial-gradient(transparent 70%, black 95%, black 100%)
     this.ctx.save();
@@ -117,6 +144,11 @@ export default class UICanvas extends Canvas {
     this.ctx.restore();
   }
 
+  /**
+   * Draws the hand icon with opacity based on the fadeProgress.
+   *
+   * @param {number} fadeProgress - A number between 0 and 1 representing the fade progress.
+   */
   drawHandIcon(fadeProgress) {
     this.ctx.save();
     this.ctx.globalAlpha = 1 - fadeProgress;
@@ -142,6 +174,11 @@ export default class UICanvas extends Canvas {
     this.ctx.restore();
   }
 
+  /**
+   * Draws the Volume icon with opacity based on the fadeProgress.
+   *
+   * @param {number} fadeProgress - A number between 0 and 1 representing the fade progress.
+   */
   drawVolumeIcon(fadeProgress) {
     this.ctx.save();
     this.ctx.globalAlpha = fadeProgress;
@@ -150,7 +187,7 @@ export default class UICanvas extends Canvas {
     this.ctx.fillStyle = "white";
     this.ctx.scale(2, 2);
     this.ctx.translate(24 / 2, 24 / 2);
-    if (this.audioManager.isMuted()) {
+    if (audioManager.isMuted()) {
       this.ctx.fill(
         new Path2D(
           "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z",
@@ -167,6 +204,9 @@ export default class UICanvas extends Canvas {
     this.ctx.restore();
   }
 
+  /**
+   * Draws the FullScreen icon
+   */
   drawFullScreenIcon() {
     this.ctx.save();
     this.ctx.fillStyle = "white";
@@ -192,6 +232,9 @@ export default class UICanvas extends Canvas {
     this.ctx.restore();
   }
 
+  /**
+   * Draws the texts with opacity based on the fadeProgress.
+   */
   drawTexts() {
     let cumulativeHeight = 0;
     let lastHeight = 0;
@@ -233,6 +276,9 @@ export default class UICanvas extends Canvas {
     );
   }
 
+  /**
+   * Draws the dot patterns
+   */
   drawPattern() {
     this.ctx.save();
     this.ctx.fillStyle = this.ctx.createPattern(this.pattern, "repeat");

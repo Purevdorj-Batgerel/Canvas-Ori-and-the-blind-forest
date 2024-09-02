@@ -1,11 +1,19 @@
 import Canvas from "./Canvas";
 import { gaussianRand } from "./utils";
+import { inputManager } from "./globalValues";
 
+/**
+ * A canvas class for drawing wisp-like particles.
+ *
+ * @extends Canvas
+ */
 export default class WispCanvas extends Canvas {
-  constructor(inputManager) {
+  /**
+   * Creates a new WispCanvas instance.
+   * @constructor
+   */
+  constructor() {
     super();
-
-    this.inputManager = inputManager;
 
     const wispCount = Math.floor(
       (window.innerHeight * window.innerWidth) / 40000,
@@ -23,6 +31,9 @@ export default class WispCanvas extends Canvas {
     }
   }
 
+  /**
+   * Updates the position and direction of the wisp particles.
+   */
   update() {
     this.wisps.forEach((wisp, index) => {
       const xChange = (Math.sin(wisp.angle) * wisp.radius) / 100;
@@ -55,10 +66,13 @@ export default class WispCanvas extends Canvas {
     });
   }
 
+  /**
+   * Draws the wisp particles on the canvas.
+   */
   draw() {
     this.clear();
     this.update();
-    const { mouseX, mouseY } = this.inputManager;
+    const { mouseX, mouseY } = inputManager;
 
     for (const wisp of this.wisps) {
       if (wisp) {

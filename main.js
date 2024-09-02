@@ -1,20 +1,16 @@
-import AudioManager from "./src/AudioManager";
 import CanvasManager from "./src/CanvasManager";
-import InputManager from "./src/Inputs";
 import ParallaxCanvas from "./src/ParallaxCanvas";
 import UICanvas from "./src/UICanvas";
 import WispCanvas from "./src/WispCanvas";
 import VisualizerCanvas from "./src/visualizer";
 
-import { fadeStartTime, setDimensionRatio } from "./src/globalValues";
+import { fadeStartTime, setDimensionRatio, audioManager, inputManager } from "./src/globalValues";
 
-const audioManager = new AudioManager();
-const inputManager = new InputManager(audioManager);
 
-const parallaxCanvas = new ParallaxCanvas(inputManager);
+const parallaxCanvas = new ParallaxCanvas();
 const wispCanvas = new WispCanvas(inputManager);
 const visualizerCanvas = new VisualizerCanvas(audioManager.analyser);
-const uiCanvas = new UICanvas(audioManager);
+const uiCanvas = new UICanvas();
 
 const canvasManager = new CanvasManager(
   parallaxCanvas,
