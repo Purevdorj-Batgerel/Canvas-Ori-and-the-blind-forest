@@ -9,7 +9,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "publish": "npm run build && gh-pages -d dist",
+    "publish": "pnpm build && gh-pages -d dist",
     "test": "ava"
   },
   "author": "Purevdorj Batgerel",
