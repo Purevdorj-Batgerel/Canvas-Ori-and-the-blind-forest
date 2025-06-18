@@ -1,6 +1,16 @@
 import CanvasManager from "./src/CanvasManager";
-import { ParallaxCanvas, UICanvas, WispCanvas, VisualizerCanvas } from "./src/canvas"
-import { fadeStartTime, setDimensionRatio, audioManager, inputManager } from "./src/globalValues";
+import {
+  ParallaxCanvas,
+  UICanvas,
+  WispCanvas,
+  VisualizerCanvas,
+} from "./src/canvas";
+import {
+  fadeStartTime,
+  setDimensionRatio,
+  audioManager,
+  inputManager,
+} from "./src/globalValues";
 
 const parallaxCanvas = new ParallaxCanvas();
 const wispCanvas = new WispCanvas();

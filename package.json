@@ -15,13 +15,13 @@
   "author": "Purevdorj Batgerel",
   "license": "ISC",
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
-    "@vitejs/plugin-basic-ssl": "^1.1.0",
-    "ava": "^6.1.3",
-    "c8": "^10.1.2",
-    "gh-pages": "^6.1.1",
-    "jsdom": "^25.0.0",
-    "vite": "^5.4.2"
+    "@biomejs/biome": "2.0.0",
+    "@vitejs/plugin-basic-ssl": "^2.0.0",
+    "ava": "^6.4.0",
+    "c8": "^10.1.3",
+    "gh-pages": "^6.3.0",
+    "jsdom": "^26.1.0",
+    "vite": "^6.3.5"
   },
-  "packageManager": "pnpm@9.9.0+sha512.60c18acd138bff695d339be6ad13f7e936eea6745660d4cc4a776d5247c540d0edee1a563695c183a66eb917ef88f2b4feb1fc25f32a7adcadc7aaf3438e99c1"
+  "packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac"
 }
