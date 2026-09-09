@@ -92,7 +92,6 @@ window.onload = async () => {
     enableDeviceOrientationIfNeeded();
   });
 
-
   await waitForImages([
     parallaxCanvas.bg_back,
     parallaxCanvas.bg_mid,

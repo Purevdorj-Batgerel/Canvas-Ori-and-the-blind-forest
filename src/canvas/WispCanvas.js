@@ -17,7 +17,7 @@ export default class WispCanvas extends Canvas {
     this.reducedMotion = prefersReducedMotion();
     this.hasDrawnStaticFrame = false;
 
-    const divisor =  WISP_DENSITY_DIVISOR;
+    const divisor = WISP_DENSITY_DIVISOR;
     const wispCount = Math.floor(
       (window.innerHeight * window.innerWidth) / divisor,
     );
