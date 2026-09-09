@@ -1,7 +1,37 @@
 const FULLSCREEN_ICON_SIZE = 60;
 const VOLUME_ICON_SIZE = 48;
 
-import { audioManager, setFadeStartTime } from "./globalValues";
+import { audioManager } from "./audioManagerInstance.js";
+import { setFadeStartTime } from "./fadeState.js";
+
+/**
+ * Checks whether the current platform requires an explicit, user-gesture-triggered
+ * permission request before `deviceorientation` events will fire (iOS 13+ Safari).
+ *
+ * @returns {boolean} True if `requestDeviceOrientationPermission` must be called first.
+ */
+export function isDeviceOrientationPermissionRequired() {
+  return (
+    typeof DeviceOrientationEvent !== "undefined" &&
+    typeof DeviceOrientationEvent.requestPermission === "function"
+  );
+}
+
+/**
+ * Requests permission to receive `deviceorientation` events. Must be called
+ * from within a user gesture handler (e.g. a click) on platforms that require it.
+ * Resolves to true immediately on platforms that don't require this step.
+ *
+ * @returns {Promise<boolean>} Whether permission was granted.
+ */
+export async function requestDeviceOrientationPermission() {
+  if (!isDeviceOrientationPermissionRequired()) {
+    return true;
+  }
+
+  const permission = await DeviceOrientationEvent.requestPermission();
+  return permission === "granted";
+}
 
 /**
  * Manages user input.
@@ -16,6 +46,18 @@ export default class InputManager {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleDeviceOrientation = this.handleDeviceOrientation.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  /**
+   * Toggles the browser fullscreen state.
+   */
+  toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen();
+    }
   }
 
   /**
@@ -74,11 +116,7 @@ export default class InputManager {
       clientY > 16 &&
       clientY < 16 + FULLSCREEN_ICON_SIZE
     ) {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      } else {
-        document.body.requestFullscreen();
-      }
+      this.toggleFullscreen();
     } else if (
       16 < clientX &&
       clientX < 16 + VOLUME_ICON_SIZE &&
@@ -89,6 +127,20 @@ export default class InputManager {
     } else if (!audioManager.isSoundInitialized) {
       audioManager.playAudio();
       setFadeStartTime(performance.now());
+    }
+  }
+
+  /**
+   * Handles keyboard shortcuts: Space toggles mute, F toggles fullscreen.
+   *
+   * @param {KeyboardEvent} event - The keydown event object.
+   */
+  handleKeyDown(event) {
+    if (event.code === "Space") {
+      event.preventDefault();
+      audioManager.toggleMute();
+    } else if (event.key.toLowerCase() === "f") {
+      this.toggleFullscreen();
     }
   }
 }

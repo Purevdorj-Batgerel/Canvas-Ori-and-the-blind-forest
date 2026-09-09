@@ -1,15 +1,14 @@
-import AudioManager from "./AudioManager";
-import InputManager from "./Inputs";
-import createValue from "./createValue";
+import createValue from "./createValue.js";
+import InputManager from "./Inputs.js";
 
-import { calcDimensionRatio } from "./utils";
+import { calcDimensionRatio } from "./utils.js";
 
-export const [fadeStartTime, setFadeStartTime] = createValue(0);
+export { audioManager } from "./audioManagerInstance.js";
+export { fadeStartTime, setFadeStartTime } from "./fadeState.js";
+
 export const [dimensionRatio, setDimensionRatio] = createValue(
   calcDimensionRatio(),
   calcDimensionRatio,
 );
-
-export const audioManager = new AudioManager();
 
 export const inputManager = new InputManager();

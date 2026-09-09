@@ -1,6 +1,9 @@
-import { easeInOutQuad } from "../animation/timings";
-import { audioManager, dimensionRatio, fadeStartTime } from "../globalValues";
-import Canvas from "./Canvas";
+import { easeInOutQuad } from "../animation/timings.js";
+import { audioManager } from "../audioManagerInstance.js";
+import { fadeStartTime } from "../fadeState.js";
+import { dimensionRatio } from "../globalValues.js";
+import { prefersReducedMotion } from "../utils.js";
+import Canvas from "./Canvas.js";
 
 const FADE_DURATION = 1000;
 const FULLSCREEN_ICON_SIZE = 60;
@@ -8,6 +11,32 @@ const FULLSCREEN_ICON_SIZE = 60;
 const SONG_TITLE = "Main Theme - Definitive Edition";
 const SONG_ARTIST = "Gareth Coker";
 const SONG_ALBUM = "Ori and the Blind Forest";
+
+/**
+ * Calculates how far through the intro fade-in a given timestamp is, eased
+ * with {@link easeInOutQuad}.
+ *
+ * @param {number|undefined} time - The current rAF timestamp, if any.
+ * @param {number} fadeStart - The timestamp the fade started at (0 if it hasn't started).
+ * @param {number} duration - How long the fade lasts, in the same units as `time`.
+ * @returns {number} A value between 0 (not started) and 1 (fully faded in).
+ */
+export function calcFadeProgress(time, fadeStart, duration) {
+  if (!time || !fadeStart) {
+    return 0;
+  }
+
+  const timeFraction = (time - fadeStart) / duration;
+
+  if (timeFraction < 0) {
+    return 0;
+  }
+  if (timeFraction > 1) {
+    return 1;
+  }
+
+  return easeInOutQuad(timeFraction);
+}
 
 /**
  * Calculates the number of lines required to fit a given text within a specified width.
@@ -54,6 +83,8 @@ export default class UICanvas extends Canvas {
     super();
 
     this.fadeProgress = 0;
+    this.isDirty = true;
+    this.reducedMotion = prefersReducedMotion();
 
     this.logo = new Image();
     this.logo.src = "./logo.webp";
@@ -63,27 +94,53 @@ export default class UICanvas extends Canvas {
   }
 
   /**
+   * Marks the canvas as needing a redraw on the next `draw()` call. Use this
+   * whenever something that isn't driven by the fade animation changes, e.g.
+   * mute/fullscreen state or a window resize.
+   */
+  markDirty() {
+    this.isDirty = true;
+  }
+
+  /**
+   * Whether `draw()` needs to actually re-render anything. Once the intro
+   * fade has finished, nothing on this canvas changes on its own, so there
+   * is nothing to redraw every frame unless `markDirty()` was called.
+   *
+   * @param {number} [time] - The current rAF timestamp, if any.
+   * @returns {boolean}
+   */
+  shouldRedraw(time) {
+    if (this.isDirty) {
+      return true;
+    }
+    if (!time || !fadeStartTime()) {
+      return false;
+    }
+    return this.fadeProgress < 1;
+  }
+
+  /**
    * Draws all the UI elements on the canvas.
    *
    * @param {number} [time] - The current time used to calculate the fade progress if provided.
    */
   draw(time) {
+    if (!this.shouldRedraw(time)) {
+      return;
+    }
+    this.isDirty = false;
+
+    if (time) {
+      this.fadeProgress = this.reducedMotion
+        ? 1
+        : calcFadeProgress(time, fadeStartTime(), FADE_DURATION);
+    }
+
     this.clear();
 
     this.drawLogo();
     this.drawGradient();
-
-    if (time) {
-      const timeFraction = (time - fadeStartTime()) / FADE_DURATION;
-      if (timeFraction < 0) {
-        return;
-      }
-      if (timeFraction > 1) {
-        this.fadeProgress = 1;
-      } else {
-        this.fadeProgress = easeInOutQuad(timeFraction);
-      }
-    }
 
     if (this.fadeProgress) {
       this.drawVolumeIcon(this.fadeProgress);
@@ -136,7 +193,14 @@ export default class UICanvas extends Canvas {
     this.ctx.fillStyle = radGrad;
     const hr = window.innerHeight / window.innerWidth;
     const wr = window.innerWidth / window.innerHeight;
-    this.ctx.setTransform(Math.min(1, wr), 0, 0, Math.min(1, hr), 0, 0);
+    this.ctx.setTransform(
+      this.dpr * Math.min(1, wr),
+      0,
+      0,
+      this.dpr * Math.min(1, hr),
+      0,
+      0,
+    );
     this.ctx.fillRect(0, 0, radius * 2, radius * 2);
     this.ctx.restore();
   }

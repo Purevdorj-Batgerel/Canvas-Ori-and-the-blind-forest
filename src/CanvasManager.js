@@ -1,4 +1,4 @@
-import Canvas from "./canvas/Canvas";
+import Canvas from "./canvas/Canvas.js";
 
 /**
  * CanvasManager class
@@ -58,12 +58,12 @@ export default class CanvasManager {
   }
 
   /**
-   * Resizes all managed canvases to match the window dimensions.
+   * Resizes all managed canvases to match the window dimensions, scaled for
+   * the device pixel ratio so rendering stays sharp on high-density screens.
    */
   resizeCanvases() {
-    for (const canvas of this.getCanvasElements()) {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    for (const canvas of this.canvases) {
+      canvas.resize();
     }
   }
 }

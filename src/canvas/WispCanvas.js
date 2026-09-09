@@ -1,6 +1,8 @@
-import { inputManager } from "../globalValues";
-import { gaussianRand } from "../utils";
-import Canvas from "./Canvas";
+import { inputManager } from "../globalValues.js";
+import { gaussianRand, prefersReducedMotion } from "../utils.js";
+import Canvas from "./Canvas.js";
+
+const WISP_DENSITY_DIVISOR = 40000;
 
 /**
  * A canvas class for drawing wisp-like particles.
@@ -12,11 +14,15 @@ export default class WispCanvas extends Canvas {
   constructor() {
     super();
 
+    this.reducedMotion = prefersReducedMotion();
+    this.hasDrawnStaticFrame = false;
+
+    const divisor =  WISP_DENSITY_DIVISOR;
     const wispCount = Math.floor(
-      (window.innerHeight * window.innerWidth) / 40000,
+      (window.innerHeight * window.innerWidth) / divisor,
     );
 
-    this.wisps = new Array(wispCount);
+    this.wisps = [];
 
     for (let i = 0; i < wispCount; i++) {
       this.wisps.push({
@@ -64,11 +70,21 @@ export default class WispCanvas extends Canvas {
   }
 
   /**
-   * Draws the wisp particles on the canvas.
+   * Draws the wisp particles on the canvas. Under reduced motion, the wisps
+   * are drawn once in their initial positions and never animated or redrawn.
    */
   draw() {
+    if (this.reducedMotion && this.hasDrawnStaticFrame) {
+      return;
+    }
+
     this.clear();
-    this.update();
+    if (this.reducedMotion) {
+      this.hasDrawnStaticFrame = true;
+    } else {
+      this.update();
+    }
+
     const { mouseX, mouseY } = inputManager;
 
     for (const wisp of this.wisps) {

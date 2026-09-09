@@ -1,16 +1,23 @@
-import CanvasManager from "./src/CanvasManager";
+import CanvasManager from "./src/CanvasManager.js";
 import {
   ParallaxCanvas,
   UICanvas,
-  WispCanvas,
   VisualizerCanvas,
-} from "./src/canvas";
+  WispCanvas,
+} from "./src/canvas/index.js";
 import {
-  fadeStartTime,
-  setDimensionRatio,
   audioManager,
   inputManager,
-} from "./src/globalValues";
+  setDimensionRatio,
+} from "./src/globalValues.js";
+import {
+  isDeviceOrientationPermissionRequired,
+  requestDeviceOrientationPermission,
+} from "./src/Inputs.js";
+import { waitForImages } from "./src/loadAssets.js";
+import { prefersReducedMotion } from "./src/utils.js";
+
+const reducedMotion = prefersReducedMotion();
 
 const parallaxCanvas = new ParallaxCanvas();
 const wispCanvas = new WispCanvas();
@@ -29,32 +36,75 @@ const draw = (time) => {
   if (audioManager.isSoundInitialized) {
     visualizerCanvas.draw();
   }
-  if (fadeStartTime()) {
-    uiCanvas.draw(time);
-  }
+  uiCanvas.draw(time);
   window.requestAnimationFrame(draw);
 };
 
-window.onload = () => {
+const handleDeviceOrientation = (event) => {
+  inputManager.handleDeviceOrientation(event);
+  parallaxCanvas.draw();
+};
+
+let motionPermissionRequested = false;
+
+const enableDeviceOrientationIfNeeded = async () => {
+  if (reducedMotion || motionPermissionRequested) {
+    return;
+  }
+  motionPermissionRequested = true;
+
+  const granted = await requestDeviceOrientationPermission();
+  if (granted) {
+    window.addEventListener("deviceorientation", handleDeviceOrientation);
+  }
+};
+
+window.onload = async () => {
   window.addEventListener("resize", () => {
     setDimensionRatio();
     canvasManager.resizeCanvases();
+    uiCanvas.markDirty();
     canvasManager.draw();
   });
-  window.addEventListener("deviceorientation", (event) => {
-    inputManager.handleDeviceOrientation(event);
-    parallaxCanvas.draw();
-  });
-  window.addEventListener("mousemove", (event) => {
-    inputManager.handleMouseMove(event);
-    parallaxCanvas.draw();
+
+  // Platforms without the permission API (desktop, Android) can listen right
+  // away; iOS 13+ Safari needs a user-gesture-triggered permission request first.
+  if (!reducedMotion && !isDeviceOrientationPermissionRequired()) {
+    window.addEventListener("deviceorientation", handleDeviceOrientation);
+  }
+
+  if (!reducedMotion) {
+    window.addEventListener("mousemove", (event) => {
+      inputManager.handleMouseMove(event);
+      parallaxCanvas.draw();
+    });
+  }
+
+  window.addEventListener("keydown", (event) => {
+    inputManager.handleKeyDown(event);
+    uiCanvas.markDirty();
   });
 
   const surfaceCanvas = canvasManager.getCanvasElements().at(-1);
-  surfaceCanvas.addEventListener("click", inputManager.handleClick);
+  surfaceCanvas.addEventListener("click", (event) => {
+    inputManager.handleClick(event);
+    uiCanvas.markDirty();
+    enableDeviceOrientationIfNeeded();
+  });
+
+
+  await waitForImages([
+    parallaxCanvas.bg_back,
+    parallaxCanvas.bg_mid,
+    parallaxCanvas.bg_fore,
+    uiCanvas.logo,
+    uiCanvas.pattern,
+  ]);
 
   canvasManager.appendToDom();
   canvasManager.draw();
+
+  document.getElementById("loading-screen")?.remove();
 
   draw();
 };

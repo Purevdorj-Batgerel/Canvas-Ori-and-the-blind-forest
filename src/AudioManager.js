@@ -47,4 +47,20 @@ export default class AudioManager {
   toggleMute() {
     this.audio.muted = !this.audio.muted;
   }
+
+  /**
+   * Sets the playback volume.
+   *
+   * @param {number} volume - A value between 0 (silent) and 1 (full volume).
+   */
+  setVolume(volume) {
+    this.audio.volume = volume;
+  }
+
+  /**
+   * @returns {number} The current playback volume, between 0 and 1.
+   */
+  getVolume() {
+    return this.audio.volume;
+  }
 }

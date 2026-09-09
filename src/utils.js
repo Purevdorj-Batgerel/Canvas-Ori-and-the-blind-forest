@@ -27,3 +27,12 @@ export function calcDimensionRatio() {
 
   return Math.min(hRatio, wRatio);
 }
+
+/**
+ * Checks whether the user has asked their OS/browser to reduce motion.
+ *
+ * @returns {boolean}
+ */
+export function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
